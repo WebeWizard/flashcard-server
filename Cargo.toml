@@ -1,0 +1,14 @@
+[package]
+name = "flashcard-server"
+version = "0.1.0"
+authors = ["WebeWizard <webewizard@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenv = "0.15.0"
+webe_auth =  { path = "../lib-webe/webe_auth"}
+webe_web = { path = "../lib-webe/webe_web" }
+webe_id = "0.1.1"
+
