@@ -1,5 +1,6 @@
 extern crate dotenv;
 
+extern crate lib_flashcard;
 extern crate webe_auth;
 extern crate webe_id;
 extern crate webe_web;
@@ -8,7 +9,8 @@ use std::env;
 use std::net::Ipv4Addr;
 use std::time::{Duration, SystemTime};
 
-use webe_auth::http::{create_account, login, logout, verify_account};
+use lib_flashcard::http::*;
+use webe_auth::http::{create_account, login, logout, secure, verify_account};
 use webe_web::responders::{file::FileResponder, options::OptionsResponder};
 use webe_web::server::{Route, Server};
 
@@ -28,11 +30,11 @@ fn main() {
     println!("Done");
 
     // create the Auth database pool
-    print!("Building Database Connection Pool......");
+    print!("Building AUTH Database Connection Pool......");
     let db_connect_string =
-        env::var("AUTH_DATABASE_URL").expect("Failed to load DB Connect string from .env");
+        env::var("AUTH_DATABASE_URL").expect("Failed to load Auth DB Connect string from .env");
     let auth_db_manager = webe_auth::db::new_manager(db_connect_string)
-        .expect("Failed to create Database connection pool");
+        .expect("Failed to create Auth Database connection pool");
     println!("Done");
 
     // create the unique ID factory
@@ -48,6 +50,20 @@ fn main() {
     let auth_manager = webe_auth::WebeAuth {
         db_manager: auth_db_manager,
         email_manager: email_pool,
+        id_factory: &id_factory,
+    };
+
+    // create the Flash database pool
+    print!("Building FLASH Database Connection Pool......");
+    let db_connect_string =
+        env::var("FLASH_DATABASE_URL").expect("Failed to load Flash DB Connect string from .env");
+    let flash_db_manager = webe_auth::db::new_manager(db_connect_string)
+        .expect("Failed to create Flash Database connection pool");
+    println!("Done");
+
+    // create the flash manager
+    let flash_manager = lib_flashcard::FlashManager {
+        db_manager: flash_db_manager,
         id_factory: &id_factory,
     };
 
@@ -70,15 +86,9 @@ fn main() {
     let options_responder = OptionsResponder::new(
         "http://localhost:1234".to_owned(),
         "POST, GET, OPTIONS".to_owned(),
-        "content-type".to_owned(),
+        "content-type, x-webe-token".to_owned(),
     );
     web_server.add_route(options_route, options_responder);
-
-    // -- static files
-    let file_route = Route::new("GET", "/<path>");
-    let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
-        .expect("Failed to create FileResponder");
-    web_server.add_route(file_route, file_responder);
 
     // -- auth
     // -- -- account
@@ -100,6 +110,21 @@ fn main() {
     web_server.add_route(logout_route, logout_responder);
 
     // -- flashcard
+    // -- -- deck
+    let get_decks_route = Route::new("GET", "/decks");
+    let get_decks_responder =
+        secure::SecureResponder::new(&auth_manager, deck::DecksResponder::new(&flash_manager));
+    web_server.add_route(get_decks_route, get_decks_responder);
+
+    let create_deck_route = Route::new("POST", "/deck/create");
+    let create_deck_responder = deck::CreateDeckResponder::new(&flash_manager);
+    web_server.add_route(create_deck_route, create_deck_responder);
+
+    // -- static files
+    // let file_route = Route::new("GET", "/<path>");
+    // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
+    //     .expect("Failed to create FileResponder");
+    // web_server.add_route(file_route, file_responder);
 
     // start the server
     let _start_result = web_server.start();

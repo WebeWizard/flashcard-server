@@ -248,6 +248,7 @@ name = "flashcard-server"
 version = "0.1.0"
 dependencies = [
  "dotenv 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lib_flashcard 0.1.0",
  "webe_auth 0.1.0",
  "webe_id 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "webe_web 0.1.0",
@@ -347,6 +348,19 @@ dependencies = [
  "mime 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.42 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "lib_flashcard"
+version = "0.1.0"
+dependencies = [
+ "diesel 1.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "r2d2 0.8.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.103 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_json 1.0.42 (registry+https://github.com/rust-lang/crates.io-index)",
+ "webe_auth 0.1.0",
+ "webe_id 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "webe_web 0.1.0",
 ]
 
 [[package]]

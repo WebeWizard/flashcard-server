@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 dotenv = "0.15.0"
+lib_flashcard = { path = "../lib-flashcard"}
 webe_auth =  { path = "../lib-webe/webe_auth"}
 webe_web = { path = "../lib-webe/webe_web" }
 webe_id = "0.1.1"
