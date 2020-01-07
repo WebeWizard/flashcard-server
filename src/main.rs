@@ -120,6 +120,13 @@ fn main() {
     let create_deck_responder = deck::CreateDeckResponder::new(&flash_manager);
     web_server.add_route(create_deck_route, create_deck_responder);
 
+    let rename_deck_route = Route::new("POST", "/deck/rename");
+    let rename_deck_responder = secure::SecureResponder::new(
+        &auth_manager,
+        deck::UpdateDeckResponder::new(&flash_manager),
+    );
+    web_server.add_route(rename_deck_route, rename_deck_responder);
+
     // -- static files
     // let file_route = Route::new("GET", "/<path>");
     // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
