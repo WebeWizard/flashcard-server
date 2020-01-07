@@ -130,6 +130,13 @@ fn main() {
   );
   web_server.add_route(rename_deck_route, rename_deck_responder);
 
+  let delete_deck_route = Route::new("POST", "/deck/delete");
+  let delete_deck_responder = secure::SecureResponder::new(
+    &auth_manager,
+    deck::DeleteDeckResponder::new(&flash_manager),
+  );
+  web_server.add_route(delete_deck_route, delete_deck_responder);
+
   // -- static files
   // let file_route = Route::new("GET", "/<path>");
   // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
