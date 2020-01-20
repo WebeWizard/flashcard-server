@@ -116,6 +116,13 @@ fn main() {
     secure::SecureResponder::new(&auth_manager, deck::DecksResponder::new(&flash_manager));
   web_server.add_route(get_decks_route, get_decks_responder);
 
+  let get_deck_details_route = Route::new("GET", "/deck/<id>");
+  let get_deck_details_responder = secure::SecureResponder::new(
+    &auth_manager,
+    deck::DeckDetailsResponder::new(&flash_manager, "<id>".to_string()),
+  );
+  web_server.add_route(get_deck_details_route, get_deck_details_responder);
+
   let create_deck_route = Route::new("POST", "/deck/create");
   let create_deck_responder = secure::SecureResponder::new(
     &auth_manager,
