@@ -144,6 +144,27 @@ fn main() {
   );
   web_server.add_route(delete_deck_route, delete_deck_responder);
 
+  let create_card_route = Route::new("POST", "/card/create");
+  let create_card_responder = secure::SecureResponder::new(
+    &auth_manager,
+    card::CreateCardResponder::new(&flash_manager),
+  );
+  web_server.add_route(create_card_route, create_card_responder);
+
+  let update_card_route = Route::new("POST", "/card/update");
+  let update_card_responder = secure::SecureResponder::new(
+    &auth_manager,
+    card::UpdateCardResponder::new(&flash_manager),
+  );
+  web_server.add_route(update_card_route, update_card_responder);
+
+  let delete_card_route = Route::new("POST", "/card/delete");
+  let delete_card_responder = secure::SecureResponder::new(
+    &auth_manager,
+    card::DeleteCardResponder::new(&flash_manager),
+  );
+  web_server.add_route(delete_card_route, delete_card_responder);
+
   // -- static files
   // let file_route = Route::new("GET", "/<path>");
   // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
