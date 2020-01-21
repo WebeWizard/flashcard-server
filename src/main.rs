@@ -144,6 +144,8 @@ fn main() {
   );
   web_server.add_route(delete_deck_route, delete_deck_responder);
 
+  // -- -- card
+
   let create_card_route = Route::new("POST", "/card/create");
   let create_card_responder = secure::SecureResponder::new(
     &auth_manager,
