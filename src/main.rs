@@ -160,6 +160,13 @@ fn main() {
   );
   web_server.add_route(update_card_route, update_card_responder);
 
+  let update_card_position_route = Route::new("POST", "/card/updatepos");
+  let update_card_position_responder = secure::SecureResponder::new(
+    &auth_manager,
+    card::UpdateCardPositionResponder::new(&flash_manager),
+  );
+  web_server.add_route(update_card_position_route, update_card_position_responder);
+
   let delete_card_route = Route::new("POST", "/card/delete");
   let delete_card_responder = secure::SecureResponder::new(
     &auth_manager,
