@@ -174,6 +174,20 @@ fn main() {
   );
   web_server.add_route(delete_card_route, delete_card_responder);
 
+  let update_score_route = Route::new("POST", "/card/score");
+  let update_score_responder = secure::SecureResponder::new(
+    &auth_manager,
+    game::UpdateScoreResponder::new(&flash_manager),
+  );
+  web_server.add_route(update_score_route, update_score_responder);
+
+  let get_deck_scores_route = Route::new("GET", "/deck/scores/<id>");
+  let get_deck_scores_responder = secure::SecureResponder::new(
+    &auth_manager,
+    game::DeckScoresResponder::new(&flash_manager, "<id>".to_string()),
+  );
+  web_server.add_route(get_deck_scores_route, get_deck_scores_responder);
+
   // -- static files
   // let file_route = Route::new("GET", "/<path>");
   // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
