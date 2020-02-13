@@ -11,7 +11,7 @@ use std::time::{Duration, SystemTime};
 
 use lib_flashcard::http::*;
 use webe_auth::http::{create_account, login, logout, secure, verify_account};
-use webe_web::responders::{file::FileResponder, options::OptionsResponder};
+use webe_web::responders::{file::FileResponder, options::OptionsResponder, spa::SPAResponder};
 use webe_web::server::{Route, Server};
 
 fn main() {
@@ -193,6 +193,13 @@ fn main() {
   // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
   //     .expect("Failed to create FileResponder");
   // web_server.add_route(file_route, file_responder);
+
+  // -- app
+  // Anything not above needs to be caught by a wildcard and redirected to index.html
+  let app_route = Route::new("GET", "/<wildcard>");
+  let app_responder = SPAResponder::new(".".to_owned(), "app/index.html".to_owned())
+    .expect("Failed to create SPAResponder");
+  web_server.add_route(app_route, app_responder);
 
   // start the server
   let _start_result = web_server.start();
