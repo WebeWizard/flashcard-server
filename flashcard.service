@@ -1,0 +1,8 @@
+[Unit]
+Description=WebeWizard's Flashcard Server
+
+[Service]
+ExecStart=/bin/bash /usr/bin/test_service.sh
+
+[Install]
+WantedBy=default.target
