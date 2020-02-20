@@ -188,13 +188,12 @@ fn main() {
   );
   web_server.add_route(get_deck_scores_route, get_deck_scores_responder);
 
-  // -- static files
-  // let file_route = Route::new("GET", "/<path>");
-  // let file_responder = FileResponder::new(".".to_owned(), "<path>".to_owned())
-  //     .expect("Failed to create FileResponder");
-  // web_server.add_route(file_route, file_responder);
-
   // -- app
+  let file_route = Route::new("GET", "/app/<path>");
+  let file_responder = FileResponder::new("./app".to_owned(), "<path>".to_owned())
+    .expect("Failed to create FileResponder");
+  web_server.add_route(file_route, file_responder);
+
   // Anything not above needs to be caught by a wildcard and redirected to index.html
   let app_route = Route::new("GET", "/<wildcard>");
   let app_responder = SPAResponder::new(".".to_owned(), "app/index.html".to_owned())
