@@ -109,11 +109,11 @@ async fn main() {
     route_map.add_route(verify_account_route, verify_account_responder);
 
     // -- -- session
-    let login_route = Route::new("POST", "/login");
+    let login_route = Route::new("POST", "/account/login");
     let login_responder = login::LoginResponder::new(auth_manager.clone());
     route_map.add_route(login_route, login_responder);
 
-    let logout_route = Route::new("POST", "/logout");
+    let logout_route = Route::new("POST", "/account/logout");
     let logout_responder = logout::LogoutResponder::new(auth_manager.clone());
     route_map.add_route(logout_route, logout_responder);
 
@@ -211,5 +211,7 @@ async fn main() {
     route_map.add_route(app_route, app_responder);
 
     // start the server
+    println!("Done");
+    println!("___FLASHCARD SERVER IS RUNNING___");
     let _start_result = web_server.start(route_map).await;
 }
